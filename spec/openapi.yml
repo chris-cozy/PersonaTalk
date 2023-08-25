@@ -1,0 +1,129 @@
+openapi: 3.0.0
+info:
+  title: JasmineAPI
+  description: The backend API for processing jasmine's brain logic
+  version: 1.0.0
+
+paths:
+  /v1/agent:
+    get:
+      tags:
+        - Agent
+      summary: Get the agent information
+      responses:
+        "200":
+          description: HTTP 200 - Successfully returned agent information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+          example:
+            name: Jasmine
+            backstory: Jasmine is a...
+        "404":
+          $ref: "#/components/responses/404Error"
+
+  /v1/conversation:
+    get:
+      tags:
+        - Conversation
+      summary: Get the entire conversation between the user and the agent
+      responses:
+        "200":
+          description: HTTP 200 - Successfully returned conversation history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Response"
+        "404":
+          $ref: "#/components/responses/404Error"
+
+  /v1/chat/completion:
+    post:
+      tags:
+        - Chat
+      summary: Create a response for the given message using conversation history
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+            example:
+              message: I love you <3
+      responses:
+        "200":
+          description: HTTP 200 - Response generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+        "400":
+          $ref: "#/components/responses/400Error"
+
+components:
+  schemas:
+    Agent:
+      type: object
+      properties:
+        name:
+          type: string
+        backstory:
+          type: string
+
+    Response:
+      type: object
+      properties:
+        initial_message:
+          type: string
+        message_reply:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+  responses:
+    400Error:
+      description: HTTP 400 - Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+    404Error:
+      description: HTTP 404 - User not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+  x-rate-limits:
+    description: Rate limiting is applied to prevent abuse of the API. Requests beyond the rate limit will receive a '429 Too Many Requests' response.
+    headers:
+      X-RateLimit-Limit:
+        description: The maximum number of requests allowed within the rate limit window.
+      X-RateLimit-Remaining:
+        description: The number of remaining requests within the current rate limit window.
+      X-RateLimit-Reset:
+        description: The time at which the rate limit window will reset.
+    global:
+      rateLimit: 10
+      rateLimitPeriod: minute
+
+tags:
+  - name: Agent
+    description: Operations related to the agent
+  - name: Conversation
+    description: Operations related to conversation
+  - name: Chat
+    description: Operations related to communicating with user
