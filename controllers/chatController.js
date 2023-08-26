@@ -1,15 +1,18 @@
 // chatController.js
-const OpenAI = require("openai"); // Assuming you're using OpenAI API
+const { Configuration, OpenAIApi } = require("openai");
 const Response = require("../models/conversation");
+const Conversation = require("../models/conversation");
 
 // Controller function to generate a chat response
-exports.generateChatResponse = (req, res) => {
+exports.generateChatResponse = async (req, res) => {
   const { message } = req.body;
 
   const currentDate = new Date();
 
-  // Assuming you have an OpenAI API key and setup
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const configuration = new Configuration({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+  const openai = new OpenAIApi(configuration);
 
   const persona = `Jasmine is a young woman with a charming, ethereal personality.
 
@@ -33,11 +36,9 @@ exports.generateChatResponse = (req, res) => {
   ---
   `;
 
-  const userIntro = `You are talking to your master Cozy. It is currently ${currentDate}.`;
+  const userIntro = `You are talking to your master, Cozy. It is currently ${currentDate}.`;
 
-  const tokenLimit = `Respond in less than 100 completion_tokens.`;
-
-  const conversationContext = `${persona}\n${userIntro}\n${tokenLimit}`;
+  const conversationContext = `${persona}\n${userIntro}`;
 
   // Assuming you have a conversation history setup
   const conversationHistory = [];
@@ -48,6 +49,26 @@ exports.generateChatResponse = (req, res) => {
   });
 
   // Fetch conversation history and add previous 5 messages, along with summary of the past 20.
+  const conversation = await Conversation.find();
+  const messageLimit = 5;
+
+  if (conversation) {
+    let messageThread = conversation[0].messages;
+
+    messageThread = messageThread.slice(-messageLimit);
+
+    messageThread.forEach((message) => {
+      conversationHistory.push({
+        role: "user",
+        content: message.initial_message,
+      });
+
+      conversationHistory.push({
+        role: "assistant",
+        content: message.message_reply,
+      });
+    });
+  }
 
   conversationHistory.push({
     role: "user",
@@ -68,6 +89,11 @@ exports.generateChatResponse = (req, res) => {
         initial_message: message,
         message_reply: response.data.choices[0].message.content,
         timestamp: new Date(),
+      });
+
+      conversation.messages.push(newResponse);
+      conversation.save().catch((err) => {
+        res.status(500).json({ message: "Error updating conversation" });
       });
 
       newResponse

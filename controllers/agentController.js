@@ -5,7 +5,7 @@ const Agent = require("../models/agent");
 exports.getAgentInformation = (req, res) => {
   // Assuming you have a method to retrieve agent data from the database
   Agent.findOne({
-    /* query parameters */
+    name: "Jasmine",
   })
     .then((agent) => {
       if (!agent) {
