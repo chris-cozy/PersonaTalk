@@ -1,7 +1,7 @@
 const mongoose = require("../config/database");
 
 const agentSchema = new mongoose.Schema({
-  name: {
+  agent_name: {
     type: String,
     required: true,
   },
