@@ -22,6 +22,30 @@ paths:
         "404":
           $ref: "#/components/responses/404AgentError"
 
+    post:
+      tags:
+        - Agent
+      summary: Create a new agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Agent"
+        example:
+          agent_name: Jasmine
+          description: A personal assistant for-
+          persona: Jasmine is a-
+      responses:
+        "201":
+          description: HTTP 201 - Agent created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+        "400":
+          $ref: "#/components/responses/400Error"
+
   /v1/agent/{agent_name}:
     get:
       tags:
@@ -63,6 +87,30 @@ paths:
                   $ref: "#/components/schemas/User"
         "404":
           $ref: "#/components/responses/404UserError"
+
+    post:
+      tags:
+        - User
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        example:
+          username: cozy
+          password: adh9na8dy98andy98
+          display_name: Chris
+      responses:
+        "201":
+          description: HTTP 201 - User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400Error"
 
   /v1/user/{username}:
     get:
