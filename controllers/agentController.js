@@ -27,9 +27,22 @@ async function getAgentByName(req, res) {
   }
 }
 
-// Implement other agent-related controller functions as needed
+// Create a new agent
+async function createAgent(req, res) {
+  const { agent_name, description, persona } = req.body;
+
+  try {
+    const agent = new Agent({ agent_name, description, persona });
+    await agent.save();
+    res.status(201).json(agent);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+}
 
 module.exports = {
   getAllAgents,
   getAgentByName,
+  createAgent,
 };

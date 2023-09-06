@@ -8,6 +8,7 @@ router.get("/", userController.getAllUsers);
 // GET /v1/user/:username
 router.get("/:username", userController.getUserByUsername);
 
-// Add more routes as needed for user-related operations
+// POST /v1/user (Create a new user)
+router.post("/", userController.createUser);
 
 module.exports = router;
