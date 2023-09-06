@@ -1,9 +1,11 @@
 const mongoose = require("../config/database");
+const uniqueIdentifier = require("../services/uniqueIdentifier");
 
 const responseSchema = new mongoose.Schema({
   response_id: {
     type: String,
-    required: true,
+    required: false,
+    default: uniqueIdentifier.generateUniqueId(),
   },
   username: {
     type: String,

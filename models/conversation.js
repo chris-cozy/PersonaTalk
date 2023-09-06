@@ -1,10 +1,12 @@
 const mongoose = require("../config/database");
-const responseSchema = require("./response"); // Import the Response schema
+const responseSchema = require("./response");
+const uniqueIdentifier = require("../services/uniqueIdentifier");
 
 const conversationSchema = new mongoose.Schema({
   conversation_id: {
     type: String,
-    required: true,
+    required: false,
+    default: uniqueIdentifier.generateUniqueId(),
   },
   username: {
     type: String,
