@@ -1,0 +1,306 @@
+openapi: 3.0.0
+info:
+  title: PersonaTalk
+  description: The backend API for communicating with digital personas
+  version: 1.0.0
+
+paths:
+  /v1/agent:
+    get:
+      tags:
+        - Agent
+      summary: Get all agents' information
+      responses:
+        "200":
+          description: HTTP 200 - Successfully returned agents' information
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Agent"
+        "404":
+          $ref: "#/components/responses/404AgentError"
+
+    post:
+      tags:
+        - Agent
+      summary: Create a new agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Agent"
+        example:
+          agent_name: Jasmine
+          description: A personal assistant for-
+          persona: Jasmine is a-
+      responses:
+        "201":
+          description: HTTP 201 - Agent created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+        "400":
+          $ref: "#/components/responses/400Error"
+
+  /v1/agent/{agent_name}:
+    get:
+      tags:
+        - Agent
+      summary: Get specified agent's information
+      parameters:
+        - name: agent_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: HTTP 200 - Successfully returned agent information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Agent"
+          example:
+            agent_name: Jasmine
+            description: A personal assistant for-
+            persona: Jasmine is a-
+        "404":
+          $ref: "#/components/responses/404AgentError"
+
+  /v1/user:
+    get:
+      tags:
+        - User
+      summary: Get all users' information
+      responses:
+        "200":
+          description: HTTP 200 - Successfully returned users' information
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "404":
+          $ref: "#/components/responses/404UserError"
+
+    post:
+      tags:
+        - User
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        example:
+          username: cozy
+          password: adh9na8dy98andy98
+          display_name: Chris
+      responses:
+        "201":
+          description: HTTP 201 - User created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400Error"
+
+  /v1/user/{username}:
+    get:
+      tags:
+        - Agent
+      summary: Get specified user's information
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: HTTP 200 - Successfully returned user information
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+          example:
+            username: cozy
+            password: adh9na8dy98andy98
+            display_name: Chris
+        "404":
+          $ref: "#/components/responses/404UserError"
+
+  /v1/conversation:
+    get:
+      tags:
+        - Conversation
+      summary: Get the entire conversation between a user and an agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                agent_name:
+                  type: string
+        example:
+          username: cozy
+          agent_name: Jasmine
+      responses:
+        "200":
+          description: HTTP 200 - Successfully returned conversation history between specified user and agent
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Response"
+        "404":
+          $ref: "#/components/responses/404ConversationError"
+
+  /v1/chat/completion:
+    post:
+      tags:
+        - Chat
+      summary: Create a response for the given message using conversation history
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Message"
+            example:
+              username: cozy
+              agent_name: Jasmine
+              message: hi
+      responses:
+        "200":
+          description: HTTP 200 - Response generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Response"
+        "400":
+          $ref: "#/components/responses/400Error"
+
+components:
+  schemas:
+    Agent:
+      type: object
+      properties:
+        agent_name:
+          type: string
+        description:
+          type: string
+        persona:
+          type: string
+
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+        display_name:
+          type: string
+
+    Message:
+      type: object
+      properties:
+        username:
+          type: string
+        agent_name:
+          type: string
+        message:
+          type: string
+
+    Response:
+      type: object
+      properties:
+        response_id:
+          type: int
+        username:
+          type: string
+        agent_name:
+          type: string
+        initial_message:
+          type: string
+        message_reply:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+  responses:
+    400Error:
+      description: HTTP 400 - Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+    404UserError:
+      description: HTTP 404 - User not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+    404AgentError:
+      description: HTTP 404 - Agent not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+    404ConversationError:
+      description: HTTP 404 - Conversation not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+  x-rate-limits:
+    description: Rate limiting is applied to prevent abuse of the API. Requests beyond the rate limit will receive a '429 Too Many Requests' response.
+    headers:
+      X-RateLimit-Limit:
+        description: The maximum number of requests allowed within the rate limit window.
+      X-RateLimit-Remaining:
+        description: The number of remaining requests within the current rate limit window.
+      X-RateLimit-Reset:
+        description: The time at which the rate limit window will reset.
+    global:
+      rateLimit: 10
+      rateLimitPeriod: minute
+
+tags:
+  - name: Agent
+    description: Operations related to the agent
+  - name: User
+    description: Operations related to the user
+  - name: Conversation
+    description: Operations related to conversation
+  - name: Chat
+    description: Operations related to communicating with user
