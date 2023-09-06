@@ -1,6 +1,6 @@
 // chatController.js
 const { Configuration, OpenAIApi } = require("openai");
-const Response = require("../models/conversation");
+const Response = require("../models/response");
 const Conversation = require("../models/conversation");
 const Agent = require("../models/agent");
 
@@ -26,7 +26,7 @@ async function generateResponse(username, agentName, message) {
     });
 
     // Fetch conversation history and add previous 5 interactions
-    let conversation = await Conversation.find({
+    let conversation = await Conversation.findOne({
       username: username,
       agent_name: agentName,
     });
@@ -34,9 +34,9 @@ async function generateResponse(username, agentName, message) {
     if (conversation) {
       const messageLimit = 5;
       let messageThread = conversation.messages;
-
-      messageThread = messageThread.slice(-messageLimit);
-
+      if (messageThread.length >= messageLimit) {
+        messageThread = messageThread.slice(-messageLimit);
+      }
       messageThread.forEach((message) => {
         conversationHistory.push({
           role: "user",
@@ -52,7 +52,6 @@ async function generateResponse(username, agentName, message) {
       conversation = new Conversation({
         username: username,
         agent_name: agentName,
-        messages: [],
       });
     }
 
@@ -74,13 +73,12 @@ async function generateResponse(username, agentName, message) {
           agent_name: agentName,
           initial_message: message,
           message_reply: response.data.choices[0].message.content,
-          timestamp: new Date(),
         });
 
         conversation.messages.push(newResponse);
         conversation.save().catch((err) => {
           console.error("Error updating conversation:", err);
-          throw error;
+          throw err;
         });
 
         newResponse
@@ -90,16 +88,16 @@ async function generateResponse(username, agentName, message) {
           })
           .catch((err) => {
             console.error("Error saying chat response:", err);
-            throw error;
+            throw err;
           });
       })
       .catch((err) => {
         console.error("Error with OpenAI API:", err);
-        throw error;
+        throw err;
       });
   } catch (err) {
     console.error("Error generating chat response:", err);
-    throw error;
+    throw err;
   }
 }
 
