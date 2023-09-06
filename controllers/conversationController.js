@@ -3,14 +3,14 @@ const Conversation = require("../models/conversation");
 
 // Get the entire conversation between a user and an agent
 async function getConversation(req, res) {
-  const username = req.params.username;
-  const agentName = req.params.agent_name;
+  const username = req.body.username;
+  const agentName = req.body.agent_name;
   try {
-    const conversation = await Conversation.find({
+    const conversation = await Conversation.findOne({
       username: username,
       agent_name: agentName,
     });
-    if (!conversation || conversation.length === 0) {
+    if (!conversation || conversation.messages.length === 0) {
       return res.status(404).json({ message: "Conversation not found" });
     }
     res.status(200).json(conversation);
