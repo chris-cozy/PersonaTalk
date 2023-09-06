@@ -1,10 +1,11 @@
 {
-  "name": "jasmineapi",
+  "name": "personatalk",
   "version": "1.0.0",
-  "description": "The backend API for processing jasmine's brain logic",
+  "description": "The backend API for communicating with digital personas",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon app.js"
   },
   "repository": {
     "type": "git",
@@ -20,7 +21,8 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "mongoose": "^7.4.4",
-    "openai": "^4.2.0",
+    "nodemon": "^3.0.1",
+    "openai": "^3.2.1",
     "uuid": "^9.0.0"
   }
 }
