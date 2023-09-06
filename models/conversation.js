@@ -1,5 +1,5 @@
 const mongoose = require("../config/database");
-const responseSchema = require("./response");
+const Response = require("./response");
 const uniqueIdentifier = require("../services/uniqueIdentifier");
 
 const conversationSchema = new mongoose.Schema({
@@ -16,7 +16,7 @@ const conversationSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  messages: [responseSchema], // Use an array of Response schema objects
+  messages: { type: [Response.schema], default: [] },
 });
 
 const Conversation = mongoose.model("Conversation", conversationSchema);
