@@ -8,8 +8,6 @@ const mongoURI = process.env.MONGO_URI;
 const options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: false,
 };
 
 // Connect to MongoDB
