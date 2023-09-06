@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: JasmineAPI
-  description: The backend API for processing jasmine's brain logic
+  title: PersonaTalk
+  description: The backend API for communicating with digital personas
   version: 1.0.0
 
 paths:
