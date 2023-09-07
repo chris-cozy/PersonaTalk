@@ -1,14 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers/userController");
+const { ensureAuthenticated } = require("../middleware/auth");
 
 // GET /v1/user
-router.get("/", userController.getAllUsers);
+router.get("/", ensureAuthenticated, userController.getAllUsers);
 
 // GET /v1/user/:username
-router.get("/:username", userController.getUserByUsername);
-
-// POST /v1/user (Create a new user)
-router.post("/", userController.createUser);
+router.get("/:username", ensureAuthenticated, userController.getUserByUsername);
 
 module.exports = router;
