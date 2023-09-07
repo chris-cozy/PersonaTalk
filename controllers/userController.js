@@ -27,22 +27,7 @@ async function getUserByUsername(req, res) {
   }
 }
 
-// Create a new user
-async function createUser(req, res) {
-  const { username, password, display_name } = req.body;
-
-  try {
-    const user = new User({ username, password, display_name });
-    await user.save();
-    res.status(201).json(user);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Internal server error" });
-  }
-}
-
 module.exports = {
   getAllUsers,
   getUserByUsername,
-  createUser,
 };
