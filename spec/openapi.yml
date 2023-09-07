@@ -192,6 +192,60 @@ paths:
         "400":
           $ref: "#/components/responses/400Error"
 
+    /v1/auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Register a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/User"
+        example:
+          username: alice
+          password: alice123
+          display_name: Alice
+      responses:
+        "201":
+          description: HTTP 201 - User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400Error"
+
+  /v1/auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Log in an existing user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+        example:
+          username: alice
+          password: alice123
+      responses:
+        "200":
+          description: HTTP 200 - User logged in successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+
 components:
   schemas:
     Agent:
@@ -274,6 +328,16 @@ components:
 
     404ConversationError:
       description: HTTP 404 - Conversation not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+    401UnauthorizedError:
+      description: HTTP 401 - Unauthorized
       content:
         application/json:
           schema:
