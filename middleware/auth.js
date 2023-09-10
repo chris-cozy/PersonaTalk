@@ -1,4 +1,4 @@
-async function ensureAuthenticated(req, res, next) {
+function ensureAuthenticated(req, res, next) {
   if (req.isAuthenticated()) {
     return next(); // User is authenticated, continue to the next middleware/route handler
   }
@@ -6,7 +6,7 @@ async function ensureAuthenticated(req, res, next) {
   res.status(500).json({ message: "User not logged in." });
 }
 
-async function checkRole([allowedRoles]) {
+function checkRole([allowedRoles]) {
   return (req, res, next) => {
     // Check if user is authenticated and has the required role
     if (req.isAuthenticated() && allowedRoles.includes(req.user.role)) {
