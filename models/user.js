@@ -15,6 +15,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    enum: ["user", "developer", "admin"],
+    default: "user",
+  },
 });
 
 userSchema.plugin(passportLocalMongoose);
