@@ -1,6 +1,6 @@
 const express = require("express");
 const session = require("express-session");
-const uniqueIdentifier = require("../services/uniqueIdentifier");
+const uniqueIdentifier = require("./services/uniqueIdentifier");
 const passport = require("passport");
 const app = express();
 app.use(express.json());
