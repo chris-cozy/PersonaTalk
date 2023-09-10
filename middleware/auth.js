@@ -3,7 +3,7 @@ async function ensureAuthenticated(req, res, next) {
     return next(); // User is authenticated, continue to the next middleware/route handler
   }
   // User is not authenticated
-  res.redirect("/login");
+  res.status(500).json({ message: "User not logged in." });
 }
 
 module.exports = {
