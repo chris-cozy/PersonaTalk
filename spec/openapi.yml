@@ -192,7 +192,7 @@ paths:
         "400":
           $ref: "#/components/responses/400Error"
 
-    /v1/auth/register:
+  /v1/auth/register:
     post:
       tags:
         - Auth
@@ -245,6 +245,36 @@ paths:
                 $ref: "#/components/schemas/User"
         "401":
           $ref: "#/components/responses/401UnauthorizedError"
+
+  /v1/auth/logout:
+    get:
+      tags:
+        - Auth
+      summary: Log out the current user
+      responses:
+        "200":
+          description: HTTP 200 - User logged out successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+
+  /v1/auth/current:
+    get:
+      tags:
+        - Auth
+      summary: Reply with the currently authenticated user
+      responses:
+        "200":
+          description: HTTP 200 - Currently authenticated user returned successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/400Error"
 
 components:
   schemas:
