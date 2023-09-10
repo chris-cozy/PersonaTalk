@@ -62,7 +62,7 @@ async function generateResponse(username, agentName, message) {
 
     openai
       .createChatCompletion({
-        model: "gpt-3.5-turbo-0613",
+        model: agent.model,
         messages: conversationHistory,
         max_tokens: 100,
       })

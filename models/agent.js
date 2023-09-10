@@ -19,6 +19,10 @@ const agentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  model: {
+    type: String,
+    default: "gpt-3.5-turbo-0613",
+  },
 });
 
 const Agent = mongoose.model("Agent", agentSchema);
