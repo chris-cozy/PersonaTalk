@@ -11,8 +11,15 @@ router.post("/login", passport.authenticate("local"), (req, res) => {
 });
 
 router.get("/logout", (req, res) => {
-  req.logout();
-  res.json({ message: "Logout successful" });
+  req.logout(function (err) {
+    if (err) {
+      return res.status(500).json({ error: err.message });
+    } else {
+      return res.json({ message: "Logout successful" });
+    }
+  });
 });
+
+router.get("/current", authController.getCurrentUser);
 
 module.exports = router;
