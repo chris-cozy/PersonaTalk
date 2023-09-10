@@ -15,7 +15,7 @@ router.get(
 router.get(
   "/:username",
   ensureAuthenticated,
-  checkRole(["user", "developer", "admin"]),
+  checkRole(["developer", "admin"]),
   userController.getUserByUsername
 );
 

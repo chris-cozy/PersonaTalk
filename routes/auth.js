@@ -5,20 +5,11 @@ const { ensureAuthenticated, checkRole } = require("../middleware/auth");
 
 const router = express.Router();
 
-router.post(
-  "/register",
-  checkRole(["user", "developer", "admin"]),
-  authController.registerUser
-);
+router.post("/register", authController.registerUser);
 
-router.post(
-  "/login",
-  checkRole(["user", "developer", "admin"]),
-  passport.authenticate("local"),
-  (req, res) => {
-    res.json({ message: "Login successful" });
-  }
-);
+router.post("/login", passport.authenticate("local"), (req, res) => {
+  res.json({ message: "Login successful" });
+});
 
 router.get("/logout", checkRole(["user", "developer", "admin"]), (req, res) => {
   req.logout(function (err) {
