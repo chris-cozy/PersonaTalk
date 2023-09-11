@@ -200,30 +200,16 @@ paths:
     get:
       tags:
         - Conversation
-      summary: Get the entire conversation between a user and an agent
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                agent_name:
-                  type: string
-        example:
-          username: cozy
-          agent_name: Jasmine
+      summary: Get all conversations
       responses:
         "200":
-          description: HTTP 200 - Successfully returned conversation history between specified user and agent
+          description: HTTP 200 OK - Successfully returned all conversations
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Response"
+                  $ref: "#/components/schemas/Conversation"
         "404":
           $ref: "#/components/responses/404ConversationError"
         "401":
@@ -234,21 +220,107 @@ paths:
     delete:
       tags:
         - Conversation
-      summary: Delete conversation between user and agent
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                username:
-                  type: string
-                agent_name:
-                  type: string
-        example:
-          username: cozy
-          agent_name: Jasmine
+      summary: Delete all conversations
+      responses:
+        "204":
+          $ref: "#/components/responses/204Success"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
+  
+  /v1/conversation/{username}:
+    get:
+      tags:
+        - Conversation
+      summary: Get all conversation for the specified user
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: HTTP 200 OK - Successfully returned all user's conversations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Conversation"
+        "404":
+          $ref: "#/components/responses/404ConversationError"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
+
+    delete:
+      tags:
+        - Conversation
+      summary: Delete all conversations for the specified user
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          $ref: "#/components/responses/204Success"
+        "404":
+          $ref: "#/components/responses/404ConversationError"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
+
+  /v1/conversation/{username}/{agent_name}:
+    get:
+      tags:
+        - Conversation
+      summary: Get conversation between the specified user and agent
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: agent_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: HTTP 200 OK - Successfully returned specified conversation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Conversation"
+        "404":
+          $ref: "#/components/responses/404ConversationError"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
+
+    delete:
+      tags:
+        - Conversation
+      summary: Delete specified conversation
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: agent_name
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         "204":
           $ref: "#/components/responses/204Success"
