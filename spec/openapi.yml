@@ -12,15 +12,19 @@ paths:
       summary: Get all agents' information
       responses:
         "200":
-          description: HTTP 200 - Successfully returned agents' information
+          description: HTTP 200 OK - Successfully returned agents' information
           content:
             application/json:
               schema:
                 type: array
                 items:
                   $ref: "#/components/schemas/Agent"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
         "404":
           $ref: "#/components/responses/404AgentError"
+        "500":
+          $ref: "#/components/responses/500Error"
 
     post:
       tags:
@@ -36,15 +40,30 @@ paths:
           agent_name: Jasmine
           description: A personal assistant for-
           persona: Jasmine is a-
+          model: gpt-3.5-turbo-0613
       responses:
         "201":
-          description: HTTP 201 - Agent created successfully
+          description: HTTP 201 Created - Agent created successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Agent"
-        "400":
-          $ref: "#/components/responses/400Error"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
+
+    delete:
+      tags:
+        - Agent
+      summary: Delete all agents
+      responses:
+        "204":
+          $ref: "#/components/responses/204Success"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
 
   /v1/agent/{agent_name}:
     get:
@@ -59,7 +78,7 @@ paths:
             type: string
       responses:
         "200":
-          description: HTTP 200 - Successfully returned agent information
+          description: HTTP 200 OK - Successfully returned agent information
           content:
             application/json:
               schema:
@@ -68,8 +87,32 @@ paths:
             agent_name: Jasmine
             description: A personal assistant for-
             persona: Jasmine is a-
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
         "404":
           $ref: "#/components/responses/404AgentError"
+        "500":
+          $ref: "#/components/responses/500Error"
+
+    delete:
+      tags:
+        - Agent
+      summary: Delete specified agent
+      parameters:
+        - name: agent_name
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          $ref: "#/components/responses/204Success"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "404":
+          $ref: "#/components/responses/404AgentError"
+        "500":
+          $ref: "#/components/responses/500Error"
 
   /v1/user:
     get:
@@ -87,30 +130,22 @@ paths:
                   $ref: "#/components/schemas/User"
         "404":
           $ref: "#/components/responses/404UserError"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
 
-    post:
+    delete:
       tags:
         - User
-      summary: Create a new user
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/User"
-        example:
-          username: cozy
-          password: adh9na8dy98andy98
-          display_name: Chris
+      summary: Delete all users
       responses:
-        "201":
-          description: HTTP 201 - User created successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
-        "400":
-          $ref: "#/components/responses/400Error"
+        "204":
+          $ref: "#/components/responses/204Success"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
 
   /v1/user/{username}:
     get:
@@ -136,6 +171,30 @@ paths:
             display_name: Chris
         "404":
           $ref: "#/components/responses/404UserError"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
+
+    delete:
+      tags:
+        - User
+      summary: Delete specified user
+      parameters:
+        - name: username
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          $ref: "#/components/responses/204Success"
+        "404":
+          $ref: "#/components/responses/404UserError"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
 
   /v1/conversation:
     get:
@@ -167,6 +226,38 @@ paths:
                   $ref: "#/components/schemas/Response"
         "404":
           $ref: "#/components/responses/404ConversationError"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
+
+    delete:
+      tags:
+        - Conversation
+      summary: Delete conversation between user and agent
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                agent_name:
+                  type: string
+        example:
+          username: cozy
+          agent_name: Jasmine
+      responses:
+        "204":
+          $ref: "#/components/responses/204Success"
+        "404":
+          $ref: "#/components/responses/404ConversationError"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
 
   /v1/chat/completion:
     post:
@@ -184,13 +275,19 @@ paths:
               message: hi
       responses:
         "200":
-          description: HTTP 200 - Response generated successfully
+          description: HTTP 200 OK - Response generated successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/Response"
-        "400":
-          $ref: "#/components/responses/400Error"
+        "404":
+          $ref: "#/components/responses/404UserError"
+        "404":
+          $ref: "#/components/responses/404AgentError"
+        "401":
+          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
 
   /v1/auth/register:
     post:
@@ -214,8 +311,8 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-        "400":
-          $ref: "#/components/responses/400Error"
+        "500":
+          $ref: "#/components/responses/500Error"
 
   /v1/auth/login:
     post:
@@ -238,13 +335,13 @@ paths:
           password: alice123
       responses:
         "200":
-          description: HTTP 200 - User logged in successfully
+          description: HTTP 200 OK - User logged in successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-        "401":
-          $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
 
   /v1/auth/logout:
     get:
@@ -252,14 +349,12 @@ paths:
         - Auth
       summary: Log out the current user
       responses:
-        "200":
-          description: HTTP 200 - User logged out successfully
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/User"
+        "204":
+          $ref: "#/components/responses/204Success"
         "401":
           $ref: "#/components/responses/401UnauthorizedError"
+        "500":
+          $ref: "#/components/responses/500Error"
 
   /v1/auth/current:
     get:
@@ -268,13 +363,13 @@ paths:
       summary: Reply with the currently authenticated user
       responses:
         "200":
-          description: HTTP 200 - Currently authenticated user returned successfully
+          description: HTTP 200 OK - Currently authenticated user returned successfully
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-        "400":
-          $ref: "#/components/responses/400Error"
+        "500":
+          $ref: "#/components/responses/500Error"
 
 components:
   schemas:
@@ -326,6 +421,16 @@ components:
           format: date-time
 
   responses:
+    204Success:
+      description: HTTP 204 - No content to return
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
     400Error:
       description: HTTP 400 - Invalid request
       content:
@@ -337,7 +442,7 @@ components:
                 type: string
 
     404UserError:
-      description: HTTP 404 - User not found
+      description: HTTP 404 - User(s) not found
       content:
         application/json:
           schema:
@@ -347,7 +452,7 @@ components:
                 type: string
 
     404AgentError:
-      description: HTTP 404 - Agent not found
+      description: HTTP 404 - Agent(s) not found
       content:
         application/json:
           schema:
@@ -357,7 +462,7 @@ components:
                 type: string
 
     404ConversationError:
-      description: HTTP 404 - Conversation not found
+      description: HTTP 404 - Conversation(s) not found
       content:
         application/json:
           schema:
@@ -367,7 +472,27 @@ components:
                 type: string
 
     401UnauthorizedError:
-      description: HTTP 401 - Unauthorized
+      description: HTTP 401 - Unauthorized to access resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+    403Error:
+      description: HTTP 403 - Forbidden to access resource
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+    500Error:
+      description: HTTP 500 - Internal server error
       content:
         application/json:
           schema:
