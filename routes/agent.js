@@ -11,6 +11,22 @@ router.get(
   agentController.getAllAgents
 );
 
+// POST /v1/agent (Create a new agent)
+router.post(
+  "/",
+  ensureAuthenticated,
+  checkRole(["developer", "admin"]),
+  agentController.createAgent
+);
+
+// DELETE /v1/agent (Delete all agents)
+router.delete(
+  "/",
+  ensureAuthenticated,
+  checkRole(["developer, admin"]),
+  agentController.deleteAllAgents
+);
+
 // GET /v1/agent/:agent_name
 router.get(
   "/:agent_name",
@@ -19,12 +35,12 @@ router.get(
   agentController.getAgentByName
 );
 
-// POST /v1/agent (Create a new agent)
-router.post(
-  "/",
+// DELETE /v1/agent/:agent_name (Delete a single agent by name)
+router.delete(
+  "/:agent_name",
   ensureAuthenticated,
   checkRole(["developer", "admin"]),
-  agentController.createAgent
+  agentController.deleteAgentByName
 );
 
 module.exports = router;
