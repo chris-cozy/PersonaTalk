@@ -11,6 +11,11 @@ router.get(
   conversationController.getConversation
 );
 
-// Add more routes as needed for conversation-related operations
+router.delete(
+  "/",
+  ensureAuthenticated,
+  checkRole(["user", "developer", "admin"]),
+  conversationController.dweleteConversation
+);
 
 module.exports = router;
