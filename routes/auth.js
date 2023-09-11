@@ -8,7 +8,7 @@ const router = express.Router();
 router.post("/register", authController.registerUser);
 
 router.post("/login", passport.authenticate("local"), (req, res) => {
-  res.json({ message: "Login successful" });
+  res.json({ message: "User logged in successfully" });
 });
 
 router.get("/logout", checkRole(["user", "developer", "admin"]), (req, res) => {
@@ -16,7 +16,7 @@ router.get("/logout", checkRole(["user", "developer", "admin"]), (req, res) => {
     if (err) {
       return res.status(500).json({ error: err.message });
     } else {
-      return res.json({ message: "Logout successful" });
+      return res.json({ message: "User logged out successfully" });
     }
   });
 });
