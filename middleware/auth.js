@@ -6,10 +6,10 @@ function ensureAuthenticated(req, res, next) {
   res.status(500).json({ message: "User not logged in." });
 }
 
-function checkRole([allowedRoles]) {
+function checkRole(allowedRoles) {
   return (req, res, next) => {
     // Check if user is authenticated and has the required role
-    if (req.isAuthenticated() && allowedRoles.includes(req.user.role)) {
+    if (allowedRoles.includes(req.user.role)) {
       return next(); // User has the required role, continue to the next middleware
     }
     // User is not authorized
