@@ -5,7 +5,7 @@ const Conversation = require("../models/conversation");
 async function getAllConversations(req, res) {
   try {
     const conversations = await Conversation.find();
-    if (conversations.length() > 0) {
+    if (conversations.length > 0) {
       res.status(200).json(conversations);
     } else {
       return res.status(404).json({ message: "No conversations found" });
@@ -31,10 +31,10 @@ async function deleteAllConversations(req, res) {
 async function getUsersConversations(req, res) {
   const username = req.params.username;
   try {
-    const conversations = await Conversation.findAll({
+    const conversations = await Conversation.find({
       username: username,
     });
-    if (conversations.length() > 0) {
+    if (conversations.length > 0) {
       res.status(200).json(conversations);
     } else {
       return res.status(404).json({ message: "No conversations found" });

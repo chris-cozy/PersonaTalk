@@ -5,7 +5,7 @@ const Agent = require("../models/agent");
 async function getAllAgents(req, res) {
   try {
     const agents = await Agent.find();
-    if (agents.length() > 0) {
+    if (agents.length > 0) {
       res.status(200).json(agents);
     } else {
       res.status(404).json({ message: "Agent(s) not found" });
