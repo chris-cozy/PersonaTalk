@@ -36,11 +36,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Agent"
-        example:
-          agent_name: Jasmine
-          description: A personal assistant for-
-          persona: Jasmine is a-
-          model: gpt-3.5-turbo-0613
       responses:
         "201":
           description: HTTP 201 Created - Agent created successfully
@@ -83,10 +78,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Agent"
-          example:
-            agent_name: Jasmine
-            description: A personal assistant for-
-            persona: Jasmine is a-
         "401":
           $ref: "#/components/responses/401UnauthorizedError"
         "404":
@@ -165,10 +156,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
-          example:
-            username: cozy
-            password: adh9na8dy98andy98
-            display_name: Chris
         "404":
           $ref: "#/components/responses/404UserError"
         "401":
@@ -228,7 +215,7 @@ paths:
           $ref: "#/components/responses/401UnauthorizedError"
         "500":
           $ref: "#/components/responses/500Error"
-  
+
   /v1/conversation/{username}:
     get:
       tags:
@@ -341,10 +328,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/Message"
-            example:
-              username: cozy
-              agent_name: Jasmine
-              message: hi
       responses:
         "200":
           description: HTTP 200 OK - Response generated successfully
@@ -353,9 +336,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/Response"
         "404":
-          $ref: "#/components/responses/404UserError"
-        "404":
-          $ref: "#/components/responses/404AgentError"
+          $ref: "#/components/responses/404Error"
         "401":
           $ref: "#/components/responses/401UnauthorizedError"
         "500":
@@ -372,10 +353,6 @@ paths:
           application/json:
             schema:
               $ref: "#/components/schemas/User"
-        example:
-          username: alice
-          password: alice123
-          display_name: Alice
       responses:
         "201":
           description: HTTP 201 - User registered successfully
@@ -402,9 +379,6 @@ paths:
                   type: string
                 password:
                   type: string
-        example:
-          username: alice
-          password: alice123
       responses:
         "200":
           description: HTTP 200 OK - User logged in successfully
@@ -454,6 +428,8 @@ components:
           type: string
         persona:
           type: string
+        model:
+          type: string
 
     User:
       type: object
@@ -463,6 +439,8 @@ components:
         password:
           type: string
         display_name:
+          type: string
+        role:
           type: string
 
     Message:
@@ -479,7 +457,7 @@ components:
       type: object
       properties:
         response_id:
-          type: int
+          type: integer
         username:
           type: string
         agent_name:
@@ -491,6 +469,20 @@ components:
         timestamp:
           type: string
           format: date-time
+
+    Conversation:
+      type: object
+      properties:
+        conversation_id:
+          type: integer
+        username:
+          type: string
+        agent_name:
+          type: string
+        messages:
+          type: array
+          items:
+            $ref: "#/components/schemas/Response"
 
   responses:
     204Success:
@@ -505,6 +497,16 @@ components:
 
     400Error:
       description: HTTP 400 - Invalid request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+    404Error:
+      description: HTTP 404 - Parameter not found
       content:
         application/json:
           schema:
