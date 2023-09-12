@@ -15,7 +15,7 @@ router.get(
 router.delete(
   "/",
   ensureAuthenticated,
-  checkRole(["developer, admin"]),
+  checkRole(["developer", "admin"]),
   userController.deleteAllUsers
 );
 
@@ -32,7 +32,7 @@ router.delete(
   "/:username",
   ensureAuthenticated,
   checkRole(["developer", "admin"]),
-  agentController.deleteUserByName
+  userController.deleteUserByName
 );
 
 module.exports = router;

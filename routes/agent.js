@@ -23,7 +23,7 @@ router.post(
 router.delete(
   "/",
   ensureAuthenticated,
-  checkRole(["developer, admin"]),
+  checkRole(["developer", "admin"]),
   agentController.deleteAllAgents
 );
 
