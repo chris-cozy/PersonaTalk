@@ -3,12 +3,22 @@ const User = require("../models/user");
 
 async function registerUser(req, res) {
   console.log(req.body);
+  let newUser;
   const { username, password, display_name } = req.body;
-  const newUser = new User({
-    username: username,
-    password: password,
-    display_name: display_name,
-  });
+  if (req.body.role) {
+    newUser = new User({
+      username: username,
+      password: password,
+      display_name: display_name,
+      role: req.body.role,
+    });
+  } else {
+    newUser = new User({
+      username: username,
+      password: password,
+      display_name: display_name,
+    });
+  }
 
   User.register(newUser, password, (err, user) => {
     if (err) {
