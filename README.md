@@ -18,14 +18,12 @@ PersonaTalk is a Node.js and Express.js-based API that enables users to interact
    ```
    git clone https://github.com/chris-cozy/PersonaTalk.git
    cd PersonaTalk
-
    ```
 
 2. Install the dependencies:
 
    ```
    npm install
-
    ```
 
 3. Set up your environment variables using a **`.env`** and fill in the required variables.
@@ -33,7 +31,6 @@ PersonaTalk is a Node.js and Express.js-based API that enables users to interact
 
    ```
    npm start
-
    ```
 
 ## **Usage**
@@ -48,23 +45,42 @@ The configuration for the API can be found in the **`config`** directory. Adjust
 
 ### **Agents**
 
-- **POST /v1/agent**: Create a new agent.
 - **GET /v1/agent**: Get all agents' information.
+- **POST /v1/agent**: Create a new agent.
+- **DELETE /v1/agent**: Delete all agents' information.
+
 - **GET /v1/agent/:agent_name**: Get specified agent's information.
+- **DELETE /v1/agent/:agent_name**: Delete specified agent.
 
 ### **Users**
 
-- **POST /v1/user**: Create a new user.
 - **GET /v1/user**: Get all users' information.
+- **DELETE /v1/user**: Delete all users' information.
+
 - **GET /v1/user/:username**: Get specified user's information.
+- **DELETE /v1/user/:username**: Delete specified user.
 
 ### **Conversations**
 
-- **GET /v1/conversation**: Get the entire conversation between a user and an agent.
+- **GET /v1/conversation**: Get all conversations
+- **DELETE /v1/conversation**: Delete all conversations
+
+- **GET /v1/conversation/:username**: Get all conversations for the specified user
+- **DELETE /v1/conversation/:username**: Delete all conversations for the specified user
+
+- **GET /v1/conversation/:username/:agent_name**: Get conversation between specified user and agent
+- **DELETE /v1/conversation/:username/:agent_name**: Delete conversation between specified user and agent
 
 ### **Chatting**
 
 - **POST /v1/chat/completion**: Create a response for the given message using conversation history.
+
+### **Authentication**
+
+- **POST /v1/auth/register**: Register a new user of the application
+- **POST /v1/auth/login**: Login as a user of the application
+- **GET /v1/auth/logout**: Logout as a user of the application
+- **GET /v1/auth/current**: Get the currently authenticated user of the application
 
 For detailed information on request and response formats, refer to the **API Specification**.
 
