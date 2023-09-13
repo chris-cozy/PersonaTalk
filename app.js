@@ -37,6 +37,7 @@ app.use("/v1/auth", authRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
+const HOST = process.env.HOST;
+app.listen(PORT, HOST, () => {
   console.log(`Server is running on port ${PORT}`);
 });
