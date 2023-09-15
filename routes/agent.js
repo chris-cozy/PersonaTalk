@@ -4,12 +4,7 @@ const agentController = require("../controllers/agentController");
 const { ensureAuthenticated, checkRole } = require("../middleware/auth");
 
 // GET /v1/agent
-router.get(
-  "/",
-  ensureAuthenticated,
-  checkRole(["user", "developer", "admin"]),
-  agentController.getAllAgents
-);
+router.get("/", ensureAuthenticated, agentController.getAllAgents);
 
 // POST /v1/agent (Create a new agent)
 router.post(
