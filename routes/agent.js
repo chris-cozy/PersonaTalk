@@ -7,12 +7,7 @@ const { ensureAuthenticated, checkRole } = require("../middleware/auth");
 router.get("/", agentController.getAllAgents);
 
 // POST /v1/agent (Create a new agent)
-router.post(
-  "/",
-  ensureAuthenticated,
-  checkRole(["developer", "admin"]),
-  agentController.createAgent
-);
+router.post("/", agentController.createAgent);
 
 // DELETE /v1/agent (Delete all agents)
 router.delete(
