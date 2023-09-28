@@ -3,7 +3,9 @@ const session = require("express-session");
 const uniqueIdentifier = require("./services/uniqueIdentifier");
 const passport = require("passport");
 const app = express();
+const cors = require("cors");
 app.use(express.json());
+app.use(cors({ origin: true }));
 
 require("dotenv").config();
 
