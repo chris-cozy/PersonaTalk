@@ -68,34 +68,37 @@ async function generateResponse(username, agent_name, message) {
           max_tokens: 100,
         })
         .then((response) => {
-          // Save the response to the database
-          const newResponse = new Response({
-            username: username,
-            agent_name: agent_name,
-            initial_message: message,
-            message_reply: response.data.choices[0].message.content,
-          });
-          console.log(newResponse);
-
-          conversation.messages.push(newResponse);
-          conversation.save().catch((err) => {
-            console.error("Error updating conversation:", err);
-            reject(err);
-          });
-
-          newResponse
-            .save()
-            .then((savedResponse) => {
-              resolve(savedResponse);
+          // Validate the message fits the agent's personality
+          openai
+            .createChatCompletion({
+              model: agent.model,
+              messages: [
+                {
+                  role: "user",
+                  content: `Message:"""${response.data.choices[0].message.content}""" Rewrite this message. Give it a friendly, casual, low-key vibe. Remove any cringe. Remove excess enthusiasm. Remove any emojis. Make the entire message lowercase. Shorten the message if possible.`,
+                },
+              ],
             })
-            .catch((err) => {
-              console.error("Error saying chat response:", err);
-              reject(err);
+            .then((response) => {
+              // Save the response to the database
+              const newResponse = new Response({
+                username: username,
+                agent_name: agent_name,
+                initial_message: message,
+                message_reply: response.data.choices[0].message.content,
+              });
+              console.log(newResponse);
+
+              conversation.messages.push(newResponse);
+              conversation.save().catch((err) => {
+                console.error("Error updating conversation:", err);
+                reject(err);
+              });
+
+              newResponse.save().then((savedResponse) => {
+                resolve(savedResponse);
+              });
             });
-        })
-        .catch((err) => {
-          console.error("Error with OpenAI API:", err);
-          reject(err);
         });
     });
   } catch (err) {
