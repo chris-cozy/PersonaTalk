@@ -1,4 +1,4 @@
-# **PersonaTalk API**
+# **PersonaTalk API** - Note: This repository is deprecated and has evolved into SyntheticSoulAPI. Navigate to that repository.
 
 PersonaTalk is a Node.js and Express.js-based API that enables users to interact with various digital personas using OpenAI's GPT model. It offers endpoints for creating and managing agents and users, retrieving agent information, conversation history, and generating responses using conversation history.
 
